@@ -1,8 +1,10 @@
 /** 
- * Placeholder (or namespace) for TMForum entity classes
+ * TMForum base entity classes
  * @author Justin Yue
  */
 public virtual class TMFEntity {
+    public enum ItemActionType { Add, Modify, Disconnect, NoChange }
+
     /**
      * A period of time, either as a deadline (endDateTime only) a startDateTime only, or both
      */ 
@@ -37,29 +39,84 @@ public virtual class TMFEntity {
     }
 
     /**
-     * Agreement reference. 
-     * An agreement represents a contract or arrangement, either written or verbal and sometimes enforceable by law, such as a service level agreement 
-     * or a customer price agreement. An agreement involves a number of other business entities, such as products, services, 
-     * and resources and/or their specifications.
+     * Extra information about a given entity
      */
-    public class AgreementItemRef {
+    public class Note {
+        // Identifier of the note within its containing entity
+        public String id;
+        // Author of the note
+        public String author;
+        // Date of the note
+        public Datetime noteDate;
+        // Text of the note
+        public String text;
+    }
+
+    /**
+     * Base Entity Reference class
+     */
+    public virtual class EntityRef {
         // Unique identifier of a related entity.
         public String id;
         // Name of the related entity.
         public String name;        
-        // Identifier of the agreement
-        public String agreementItemId;
+    }
+
+    /**
+     * Agreement reference. 
+     */
+    public class AgreementRef extends EntityRef { }
+
+    /**
+     * Agreement reference. 
+     */
+    public class AgreementItemRef extends EntityRef { }
+
+    /**
+     * Refers an appointment, such as a Customer presentation or internal meeting or site visit
+     */
+    public class AppointmentRef {
+        // Unique identifier of a related entity.
+        public String id;
+        // An explanatory text regarding the appointment made with a party.
+        public String description;        
+    }
+
+    /**
+     * Payment reference. 
+     */
+    public class PaymentRef extends EntityRef { }
+
+    /**
+     * Quote reference. 
+     */
+    public class QuoteRef extends EntityRef { }
+
+    /**
+     * QuoteItem reference. 
+     */
+    public class QuoteItemRef extends EntityRef { }
+    
+    /**
+     * ProductOfferingQualification reference. 
+     */
+    public class ProductOfferingQualificationRef extends EntityRef { }
+
+    /**
+     * It's a productOfferingQualification item that has been executed previously.
+     */
+    public class ProductOfferingQualificationItemRef extends EntityRef { 
+        // Unique identifier of a related entity.
+        public String productOfferingQualificationId;
+        // Name of the related entity.
+        public String productOfferingQualificationName;
+
     }
 
     /**
      * BillingAccount reference. A BillingAccount is a detailed description of a bill structure.
      */
-    public class BillingAccountRef {
-        // Unique identifier of the billing account
-        public String id;
-        // Name of the billing account
-        public String name;        
-    }
+    public class BillingAccountRef extends EntityRef { }
 
     /**
      * Related Entity reference. A related place defines a place described by reference or by value linked to a specific entity. 
@@ -73,6 +130,18 @@ public virtual class TMFEntity {
         // Role of the place
         public String role;    
     }    
+
+
+    /**
+     * Related channel to another entity. May be online web, mobile app, social ,etc
+     */
+    public class RelatedChannel {
+        // Unique identifier 
+        public String id;
+        // Name of the channel.
+        public String name;    
+    }    
+
 
     /**
      * 	Describes a given characteristic of an object or entity through a name/value pair.
@@ -90,12 +159,7 @@ public virtual class TMFEntity {
      * ProductOffering reference. 
      * A product offering represents entities that are orderable from the provider of the catalog, this resource includes pricing information.     
      */
-    public class ProductOfferingRef {
-        // Unique identifier of a related entity.
-        public String id;
-        //Name of the related entity.
-        public String name;    
-    }
+    public class ProductOfferingRef extends EntityRef { }
 
     /**
      * RelatedProductOrderItem (ProductOrder item) .The product order item which triggered product creation/change/termination.
@@ -111,20 +175,6 @@ public virtual class TMFEntity {
         public String role;
     }
 
-    /**
-     * Linked products to the one instantiate, such as [bundled] if the product is a bundle and you want to describe the
-     * bundled products inside this bundle; [reliesOn] if the product needs another already owned product to rely on (e.g.
-     * an option on an already owned mobile access product) [targets] or [isTargeted] (depending on the way of
-     * expressing the link) for any other kind of links that may be useful.
-     */
-    public class ProductRelationship {
-        // Related product
-        public Product product;
-        // Type of the product relationship, such as [bundled] if the product is a bundle and you want to describe the bundled products inside this bundle; 
-        // [reliesOn] if the product needs another already owned product to rely on (e.g. an option on an already owned mobile access product) [targets] or 
-        // [isTargeted] (depending on the way of expressing the link) for any other kind of links that may be useful
-        public String relationshipType;
-    }    
 
     /**
      * Product specification reference: A ProductSpecification is a detailed description of a tangible or intangible object made available externally 
@@ -153,14 +203,7 @@ public virtual class TMFEntity {
     /**
      * Service reference, for when Service is used by other entities
      */
-    public class ServiceRef {
-        // Unique identifier
-        public String id;
-        // Name of the service
-        public String name;
-
-        public ServiceRef() {}
-    }
+    public class ServiceRef extends EntityRef { }
 
     /**
      * Resource reference, for when Resource is used by other entities
@@ -177,6 +220,20 @@ public virtual class TMFEntity {
     }
 
     /**
+     * Indicates the contact medium that could be used to contact the party.
+     */
+    public class ContactMedium {
+        // Unique identifier
+        public String id;
+        // If true, indicates that is the preferred contact medium
+        public Boolean preferred;
+        // Type of the contact medium to qualifiy it like pro email / personal email. This is not used to define the contact medium used.
+        public String contactType;
+        // A period of time, either as a deadline (endDateTime only) a startDateTime only, or both
+        public TimePeriod validFor;
+    }
+
+    /**
      * Related Entity reference. A related party defines party or party role linked to a specific entity.
      */ 
     public virtual class RelatedParty {
@@ -187,20 +244,6 @@ public virtual class TMFEntity {
         // Role played by the related party
         public String role;
 
-    }
-
-    /**
-     * Description of a productTerm linked to this product. This represent a commitment with a duration
-     */
-    public class ProductTerm {
-        // Description of the productTerm
-        public String description;
-        // Name of the productTerm
-        public String name;
-        // An amount in a given unit
-        public Quantity duration;
-        // A period of time for the productTerm to be valid
-        public TimePeriod validFor;
     }
 
     /**
@@ -245,7 +288,7 @@ public virtual class TMFEntity {
      * An amount, usually of money, that represents the actual price paid by a Customer for a purchase, a rent or a lease of a Product. 
      * The price is valid for a defined period of time.
      */
-    public class ProductPrice {
+    public abstract class EntityPrice {
         // A narrative that explains in detail the semantics of this product price.
         public String description;
         // A short descriptive name such as "Subscription price".
@@ -269,65 +312,12 @@ public virtual class TMFEntity {
     }
 
     /**
-     * A product offering procured by a customer or other interested party playing a party role. A product is realized as one or more service(s) and / or resource(s).
+     * Base entity relationship class
      */
-    public virtual class Product {
-        // Unique identifier of the product
+    public abstract class EntityRelationship {
+        // The id of entity relationship
         public String id;
-        // Is the description of the product. It could be copied from the description of the Product Offering.
-        public String description;
-        // If true, the product is a ProductBundle which is an instantiation of a BundledProductOffering. If false, the product is a ProductComponent which is an instantiation of a SimpleProductOffering.
-        public Boolean isBundle;
-        // If true, the product is visible by the customer.
-        public Boolean isCustomerVisible;
-        // Name of the product. It could be the same as the name of the product offering
-        public String name;
-        // A date time (DateTime). Is the date when the product was ordered.
-        public Datetime orderDate;
-        // Is the serial number for the product. This is typically applicable to tangible products e.g. Broadband Router.
-        public String productSerialNumber;
-        // Is the date from which the product starts.
-        public Datetime startDate;
-        // Is the date when the product was terminated.
-        public Datetime terminationDate;
-        // A list of agreement item references (AgreementItemRef [*]). Agreement reference.
-        public AgreementItemRef[] agreement;
-        // A billing account reference (BillingAccountRef).
-        public BillingAccountRef billingAccount;
-        // A list of related place ref or values (Place [*]).
-        public RelatedPlaceRefOrValue[] place;
-        // public Place[] place;
-        // A product to be created defined by value or existing defined by reference.
-        public Product[] product;
-        // Describes a given characteristic of an object or entity through a name/value pair.
-        public Characteristic[] productCharacteristic;
-        // A product offering reference (ProductOfferingRef).
-        public ProductOfferingRef productOffering;
-        // A list of related product order items (RelatedProductOrderItem [*]).
-        public RelatedProductOrderItem[] productOrderItem;
-        // A list of product prices (ProductPrice [*]). An amount, usually of money, that represents the actual price paid by a Customer for a purchase, a rent or a lease of a Product. The price is valid for a defined period of time.
-        public ProductPrice[] productPrice;
-        // A list of product relationships (ProductRelationship [*]). Linked products to the one instantiate, such as bundled, reliesOn, targets or isTargeted, ...
-        public ProductRelationship[] productRelationship;
-        // A product specification reference (ProductSpecificationRef). 
-        public ProductSpecificationRef productSpecification;
-        // Description of a productTerm linked to this product. This represent a commitment with a duration
-        public ProductTerm[] productTerm;
-
-        // Resource reference, for when Resource is used by other entities
-        public ServiceRef[] realizingResource;
-        // Service reference, for when Service is used by other entities
-        public ResourceRef[] realizingService;
-
-        // A list of related parties (RelatedParty [*]).
-        public RelatedParty[] relatedParty;
-        // A product status type (ProductStatusType). Is the lifecycle status of the product. 
-        // Values: created, pendingActive, cancelled, active, pendingTerminate, terminated, suspended, aborted
-        public String status;
-
-        // 
-        public Integer quantity;        
-        
-        public Product() {}
-   }
+        // The type of entity relationship
+        public String relationshipType;
+    } 
 }
