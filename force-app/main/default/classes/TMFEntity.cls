@@ -83,9 +83,123 @@ public virtual class TMFEntity {
     }
 
     /**
+     * ServiceLevelAgreement reference. 
+     */
+    public class SLARef extends EntityRef { }
+
+    /**
+     * ServiceCandidate reference. ServiceCandidate is an entity that makes a ServiceSpecification available to a catalog.
+     */
+    public class ServiceCandidateRef extends EntityRef { }
+
+    /**
+     * ResourceCandidate is an entity that makes a resource specification available to a catalog. A ResourceCandidate and its associated resource 
+     * specification may be published - made visible - in any number of resource catalogs, or in none.
+     */
+    public class ResourceCandidateRef extends EntityRef { }
+
+    /**
+     * The channel to which the resource reference to. e.g. channel for selling product offerings, channel for opening a trouble ticket etc. 
+     */
+    public class ChannelRef extends EntityRef { }
+
+    /**
+     * provides references to the corresponding market segment as target of product offerings. 
+     * A market segment is grouping of Parties, GeographicAreas, SalesChannels, and so forth.
+     */
+    public class MarketSegmentRef extends EntityRef { }
+
+
+    /**
+     * Policy reference. 
+     */
+    public class PlaceRef extends EntityRef { }
+
+    /**
+     * Place reference. 
+     */
+    public class PolicyRef extends EntityRef { }
+
+    /**
      * Payment reference. 
      */
     public class PaymentRef extends EntityRef { }
+
+    /**
+     * Reference to a category in the catalog.
+     */
+    public class CategoryRef extends EntityRef {
+        // Version of the category
+        public String version;
+    }
+
+    /**
+     * RelatedParty reference. A related party defines party or party role or its reference, linked to a specific entity
+     */
+    public class RelatedPartyRefOrPartyRoleRef {
+        // Role played by the related party or party role in the context of the specific entity it is linked to. Such as 'initiator', 'customer', 'salesAgent', 'user'
+        public String role;
+        // A Party or party role reference
+        public PartyRefOrPartyRoleRef partyOrPartyRole;
+    }
+
+    /**
+     * A Party or party role reference
+     */
+    public virtual class PartyRefOrPartyRoleRef extends EntityRef {}
+
+    /**
+     * A Party reference
+     */
+    public class PartyRef extends PartyRefOrPartyRoleRef {}
+
+    /**
+     * A Party role reference
+     */
+    public class PartyRoleRef extends PartyRefOrPartyRoleRef {
+        // The identifier of the engaged party that is linked to the PartyRole object.
+        public String partyId;
+        // The name of the engaged party that is linked to the PartyRole object.
+        public String partyName;
+    }
+
+
+    /**
+     * one of ProductOfferingPrice or ProductOfferingPriceRef
+     */
+    public virtual class ProductOfferingPriceRef extends ProductOfferingPriceRefOrValue {}
+
+    /**
+     * ProductPriceOffering reference. An amount, usually of money, that is asked for or allowed when a ProductOffering is bought, rented, or leased
+     */
+    public virtual class ProductOfferingPriceRefOrValue extends EntityRef {
+        // Version of the category
+        public String version;
+    }
+
+    /**
+     * ServiceSpecification reference.
+     */
+    public class ServiceSpecificationRef extends EntityRef {
+        // Version of the category
+        public String version;
+    }
+
+    /**
+     * ResourceSpecification reference.
+     */
+    public class ResourceSpecificationRef extends EntityRef {
+        // Version of the category
+        public String version;
+    }
+
+    /**
+     * ProductOffering reference.
+     */
+    public class ProductOfferingRef extends EntityRef {
+        // Version of the category
+        public String version;
+    }
 
     /**
      * Quote reference. 
@@ -113,6 +227,37 @@ public virtual class TMFEntity {
 
     }
 
+    /** 
+     * Complements the description of an element (for instance a product) through video, pictures...
+     * Oneof: Attachment or AttachmentRef
+     */
+    public virtual class AttachmentRefOrValue extends EntityRef {}
+
+    /**
+     * Attachment reference
+     */
+    public class AttachmentRef extends AttachmentRefOrValue {}
+
+    /**
+     * Complements the description of an element (for instance a product) through video, pictures...
+     */
+    public class Attachment extends AttachmentRefOrValue {
+        // A narrative text describing the content of the attachment
+        public String description;
+        // The actual contents of the attachment object, if embedded, encoded as base64
+        public Blob content;
+        // Uniform Resource Locator, is a web page address (a subset of URI)
+        public String url;
+        // An amount in a given unit
+        public Quantity size;
+        // A period of time, either as a deadline (endDateTime only) a startDateTime only, or both
+        public TimePeriod validFor;
+        // a business characterization of the purpose of the attachment, for example logo, instructionManual, contractCopy
+        public String attachmentType;
+        // a technical characterization of the attachment content format using IETF Mime Types
+        public String mimeType;
+    }
+
     /**
      * BillingAccount reference. A BillingAccount is a detailed description of a bill structure.
      */
@@ -131,6 +276,21 @@ public virtual class TMFEntity {
         public String role;    
     }    
 
+    /**
+     * An identification of an entity that is owned by or originates in a software system different from the current system, for example a ProductOrder 
+     * handed off from a commerce platform into an order handling system. The structure identifies the system itself, the nature of the entity within the 
+     * system (e.g. class name) and the unique ID of the entity within the system. It is anticipated that multiple external IDs can be held for a single entity, 
+     * e.g. if the entity passed through multiple systems on the way to the current system. In this case the consumer is expected to sequence the IDs in the 
+     * array in reverse order of provenance, i.e. most recent system first in the list.
+     */
+    public class ExternalIdentifier {
+        // identification of the entity within the external system.
+        public String id;
+        // Type of the identification, typically would be the type of the entity within the external system
+        public String externalIdentifierType;    
+        // Name of the external system that owns the entity.
+        public String owner;    
+    }
 
     /**
      * Related channel to another entity. May be online web, mobile app, social ,etc
@@ -142,6 +302,17 @@ public virtual class TMFEntity {
         public String name;    
     }    
 
+    /**
+     * A tax item is created for each tax rate and tax type used in the bill.
+     */
+    public class TaxItem {
+        // A base / value business entity used to represent money
+        public Money taxAmount;
+        // Applied rate of the tax
+        public Decimal taxRate;
+        // Tax category
+        public String taxCategory;
+    }
 
     /**
      * 	Describes a given characteristic of an object or entity through a name/value pair.
@@ -156,10 +327,14 @@ public virtual class TMFEntity {
     }
 
     /**
-     * ProductOffering reference. 
-     * A product offering represents entities that are orderable from the provider of the catalog, this resource includes pricing information.     
+     * A time interval in a given unit of time
      */
-    public class ProductOfferingRef extends EntityRef { }
+    public class Duration {
+        // Time interval (number of seconds, minutes, hours, etc.)
+        public Integer amount;
+        // Unit of time (seconds, minutes, hours, etc.)
+        public String units;
+    }
 
     /**
      * RelatedProductOrderItem (ProductOrder item) .The product order item which triggered product creation/change/termination.
@@ -189,15 +364,6 @@ public virtual class TMFEntity {
         public String version;
 
         public ProductSpecificationRef() {}
-    }
-    /**
-     * @description ProductPriceOffering reference. An amount, usually of money, that is asked for or allowed when a ProductOffering is bought, rented, or leased.
-     */
-    public class ProductOfferingPriceRef {
-        // Unique identifier
-        public String id;
-        // Name of the ProductOfferingPrice
-        public String name;
     }
 
     /**
@@ -317,6 +483,8 @@ public virtual class TMFEntity {
     public abstract class EntityRelationship {
         // The id of entity relationship
         public String id;
+        // The name of entity relationship
+        public String name;
         // The type of entity relationship
         public String relationshipType;
     } 
