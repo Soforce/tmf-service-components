@@ -2,7 +2,7 @@
  * TMForum ProductCatalog entity classes
  * @author Justin Yue
  */
-public virtual class TMFProductCatalogEntity extends TMFEntity {
+ public virtual class TMFProductCatalogEntity extends TMFEntity {
     /**
      * A condition under which a ProductOffering is made available to Customers. For instance, a productOffering can be offered with multiple commitment periods.
      */

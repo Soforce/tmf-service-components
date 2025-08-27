@@ -46,17 +46,17 @@ public virtual class TMFProductInventoryEntity extends TMFEntity {
     /**
      * A product offering procured by a customer or other interested party playing a party role. A product is realized as one or more service(s) and / or resource(s).
      */
-    public virtual class Product {
-        // Unique identifier of the product
-        public String id;
+    public virtual class Product extends ProductRefOrValue {
+        // // Unique identifier of the product
+        // public String id;
+        // // Name of the product. It could be the same as the name of the product offering
+        // public String name;
         // Is the description of the product. It could be copied from the description of the Product Offering.
         public String description;
         // If true, the product is a ProductBundle which is an instantiation of a BundledProductOffering. If false, the product is a ProductComponent which is an instantiation of a SimpleProductOffering.
         public Boolean isBundle;
         // If true, the product is visible by the customer.
         public Boolean isCustomerVisible;
-        // Name of the product. It could be the same as the name of the product offering
-        public String name;
         // A date time (DateTime). Is the date when the product was ordered.
         public Datetime orderDate;
         // Is the serial number for the product. This is typically applicable to tangible products e.g. Broadband Router.
@@ -106,8 +106,8 @@ public virtual class TMFProductInventoryEntity extends TMFEntity {
         public Product() {}
     }
 
-    /**
-     * A product to be created defined by value or existing defined by reference. The polymorphic attributes @type, @schemaLocation & @referredType are related to the product entity and not the RelatedProductRefOrValue class itself
-     */
-    public class ProductRefOrValue extends Product { }
+    // /**
+    //  * A product to be created defined by value or existing defined by reference. The polymorphic attributes @type, @schemaLocation & @referredType are related to the product entity and not the RelatedProductRefOrValue class itself
+    //  */
+    // public class ProductRefOrValue extends Product { }
 }

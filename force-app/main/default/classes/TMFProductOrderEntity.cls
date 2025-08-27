@@ -23,7 +23,7 @@ public virtual class TMFProductOrderEntity extends TMFEntity {
         public String description;
         // Expected delivery date amended by the provider.
         public Datetime expectedCompletionDate;
-        // ID given by the consumer and only understandable by him (to facilitate his searches afterwards). - Amdocs Order Id
+        // ID given by the consumer and only understandable by him (to facilitate his searches afterwards). 
         public String externalId;
         // Contact attached to the order to send back information regarding this order
         public String notificationContact;
@@ -97,7 +97,7 @@ public virtual class TMFProductOrderEntity extends TMFEntity {
         // A list of payment references (PaymentRef [*]). If an immediate payment has been done at the product order submission, the payment information are captured and stored (as a reference) in the order.
         public PaymentRef[] payment;
         // A product ref or value (ProductRefOrValue). A product to be created defined by value or existing defined by reference. The polymorphic attributes @type, @schemaLocation & @referredType are related to the product entity and not the RelatedProductRefOrValue class itself.
-        public TMFProductInventoryEntity.ProductRefOrValue product;
+        public ProductRefOrValue product;
 
         // A product offering reference (ProductOfferingRef). A product offering represents entities that are orderable from the provider of the catalog, this resource includes pricing information.
         public ProductOfferingRef productOffering;
@@ -118,5 +118,9 @@ public virtual class TMFProductOrderEntity extends TMFEntity {
     /**
      * An amount, usually of money, that represents the actual price paid by the Customer for this item or this order
      */
-    public class OrderPrice extends EntityPrice { }    
+    public class OrderPrice extends EntityPrice { 
+        // A billing account reference (BillingAccountRef).
+        public BillingAccountRef billingAccount;
+
+    }    
 }

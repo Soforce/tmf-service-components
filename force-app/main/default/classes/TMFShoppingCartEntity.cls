@@ -85,7 +85,7 @@ public virtual class TMFShoppingCartEntity extends TMFEntity {
         // Extra information about a given item
         public Note[] note;
         // A product ref or value (ProductRefOrValue). A product to be created defined by value or existing defined by reference. The polymorphic attributes @type, @schemaLocation & @referredType are related to the product entity and not the RelatedProductRefOrValue class itself.
-        public TMFProductInventoryEntity.ProductRefOrValue product;
+        public ProductRefOrValue product;
         // A product offering reference (ProductOfferingRef). A product offering represents entities that are orderable from the provider of the catalog, this resource includes pricing information.
         public ProductOfferingRef productOffering;
         // A list cart items. 

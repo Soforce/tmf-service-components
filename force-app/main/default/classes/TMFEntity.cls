@@ -165,6 +165,16 @@ public virtual class TMFEntity {
 
 
     /**
+     * one of ProductRef or TMFProductInventory.Product
+     */
+    public virtual class ProductRefOrValue extends EntityRef {}
+    
+    /**
+     * Product reference
+     */
+    public virtual class ProductRef extends EntityRef {}
+
+    /**
      * one of ProductOfferingPrice or ProductOfferingPriceRef
      */
     public virtual class ProductOfferingPriceRef extends ProductOfferingPriceRefOrValue {}
@@ -386,6 +396,23 @@ public virtual class TMFEntity {
     }
 
     /**
+     * If special discount or special product offering price or specific condition need an approval for ISP sale representative it is described here.
+     */
+    public class Authorization {
+        // Date when the authorization (approved or declined) was done
+        public Datetime givenDate;
+        // Name of the required authorization
+        public String name;
+        // Date when the authorization is requested for
+        public Datetime requestedDate;
+        // To describe a digital or manual signature
+        public String signatureRepresentation;
+        // State of the authorization, such as: approved or declined
+        public String state;
+        // RelatedParty reference.
+        public RelatedPartyRefOrPartyRoleRef[] approver;
+    }
+    /**
      * Indicates the contact medium that could be used to contact the party.
      */
     public class ContactMedium {
@@ -465,8 +492,6 @@ public virtual class TMFEntity {
         public String recurringChargePeriod;
         // Could be minutes, GB...
         public String unitOfMeasure;
-        // A billing account reference (BillingAccountRef).
-        public BillingAccountRef billingAccount;
         // Provides all amounts (tax included, duty free, tax rate), used currency and percentage to apply for Price Alteration.
         public Price price;
         
@@ -474,7 +499,7 @@ public virtual class TMFEntity {
         public ProductOfferingPriceRef productOfferingPrice;
 
         // A list of price alterations (PriceAlteration [*]). Is an amount, usually of money, that modifies the price charged for an order item.
-        public PriceAlteration[] productPriceAlteration;
+        public PriceAlteration[] priceAlteration;
     }
 
     /**
