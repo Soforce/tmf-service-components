@@ -6,11 +6,4 @@ public inherited sharing class ProductAccess {
 
     }
 
-
-    /**
-     * 
-     */
-    public Asset upsertProduct(TMFEntity.Product product) {
-
-    }
 }
